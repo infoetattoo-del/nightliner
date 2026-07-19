@@ -205,7 +205,12 @@
   .route-body strong{color:var(--paper);font-weight:600;}
 
   /* ---------- TRANSMISSIONS ---------- */
-  .transmissions{background:var(--night);}
+  .transmissions{
+    position:relative;
+    background:
+      linear-gradient(180deg, rgba(7,9,11,0.90) 0%, rgba(7,9,11,0.80) 40%, rgba(7,9,11,0.94) 100%),
+      url('transmissions-bg.jpg') center 30% / cover no-repeat fixed;
+  }
   .lede{
     color:var(--dust);
     max-width:520px;
@@ -215,7 +220,7 @@
   }
   .cards{
     display:grid;
-    grid-template-columns:repeat(3, 1fr);
+    grid-template-columns:repeat(2, 1fr);
     gap:1px;
     background:var(--line);
     border:1px solid var(--line);
@@ -224,14 +229,15 @@
     .cards{grid-template-columns:1fr;}
   }
   .card{
-    background:var(--night);
+    background:rgba(7,9,11,0.55);
+    backdrop-filter:blur(3px);
     padding:36px 30px;
     display:flex;
     flex-direction:column;
-    gap:22px;
+    gap:18px;
     transition:background .3s ease;
   }
-  .card:hover{background:var(--deep);}
+  .card:hover{background:rgba(15,45,77,0.6);}
   .card-index{
     font-family:'IBM Plex Mono', monospace;
     font-size:0.75rem;
@@ -243,32 +249,24 @@
     text-transform:uppercase;
     color:var(--paper);
   }
-  .card-status{
+  .sc-embed{
+    border-radius:2px;
+    overflow:hidden;
+    line-height:0;
+  }
+  .sc-embed iframe{display:block;}
+  .sc-caption{
     font-family:'IBM Plex Mono', monospace;
     font-size:0.68rem;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
+    letter-spacing:0.04em;
     color:var(--dust);
-    display:flex;
-    justify-content:space-between;
   }
-  .progress{
-    height:2px;
-    width:100%;
-    background:var(--line-strong);
-    position:relative;
-    overflow:hidden;
-  }
-  .progress i{
-    position:absolute;left:0;top:0;bottom:0;
-    background:var(--copper);
-    width:var(--pct);
-  }
-  .card-note{
-    font-size:0.85rem;
+  .sc-caption a{
     color:var(--dust);
-    line-height:1.6;
+    border-bottom:1px solid transparent;
+    transition:color .2s ease, border-color .2s ease;
   }
+  .sc-caption a:hover{color:var(--paper);border-color:var(--accent);}
 
   /* ---------- CONTACT ---------- */
   .contact{
@@ -397,7 +395,7 @@
   <div id="top" class="hero">
     <img class="hero-bg" src="hero.png" alt="Nightliner — route de nuit">
     <div class="hero-content">
-      <p class="hero-tag">Recorded between shifts.<br><span>Ableton Live 11 · Push 2 · Roland S‑1.</span><br>Three tracks under construction.</p>
+      <p class="hero-tag">Recorded between shifts.<br><span>Ableton Live 11 · Push 2 · Roland S‑1.</span><br>Two transmissions out now.</p>
       <div class="scroll-cue"><span>Scroll</span><span class="line"></span></div>
     </div>
   </div>
@@ -412,7 +410,7 @@
       <div class="route-body reveal">
         <p>The name comes from the job: <strong>night-shift coach driver</strong>, hours spent fixing on the white line while the city sleeps. Music has always run in parallel — techno and minimal, produced since the early 2010s, until a pause in 2012.</p>
         <p>Nightliner is that pause coming to an end. The project is back on the road with new gear and a slower, more deliberate way of building tracks: less speed, more distance.</p>
-        <p>Three tracks are currently in the works. No release announced yet — for now, just the journey.</p>
+        <p>Two tracks are already out on the road. More are in the works. No album announced yet — for now, just the journey.</p>
       </div>
     </div>
   </section>
@@ -422,28 +420,23 @@
       <span class="eyebrow">002 — In progress</span>
       <h2>Transmissions</h2>
     </div>
-    <p class="lede reveal">Three tracks in the works, tracked like a journey: starting point, progress, destination still to be set.</p>
+    <p class="lede reveal">Two transmissions, live from the road. More on the way.</p>
     <div class="cards reveal">
       <div class="card">
         <span class="card-index">TRK / 01</span>
-        <h3>Track 01</h3>
-        <div class="card-status"><span>Composition</span><span>70%</span></div>
-        <div class="progress"><i style="--pct:70%"></i></div>
-        <p class="card-note">Title TBA. Rhythm section locked in, working on textures with the Roland S‑1.</p>
+        <h3>After Curfew</h3>
+        <div class="sc-embed">
+          <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay; encrypted-media" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2363508407&color=%230f2d4d&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
+        </div>
+        <div class="sc-caption"><a href="https://soundcloud.com/nightliner" target="_blank" rel="noopener">Nightliner</a> · <a href="https://soundcloud.com/nightliner/aftercurfew" target="_blank" rel="noopener">After Curfew</a></div>
       </div>
       <div class="card">
         <span class="card-index">TRK / 02</span>
-        <h3>Track 02</h3>
-        <div class="card-status"><span>Arrangement</span><span>45%</span></div>
-        <div class="progress"><i style="--pct:45%"></i></div>
-        <p class="card-note">Title TBA. Sequence built on the Push 2, structure still open.</p>
-      </div>
-      <div class="card">
-        <span class="card-index">TRK / 03</span>
-        <h3>Track 03</h3>
-        <div class="card-status"><span>Sketch</span><span>20%</span></div>
-        <div class="progress"><i style="--pct:20%"></i></div>
-        <p class="card-note">Title TBA. Still at the idea stage, direction not fully set.</p>
+        <h3>Departure</h3>
+        <div class="sc-embed">
+          <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay; encrypted-media" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2354735027&color=%230f2d4d&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
+        </div>
+        <div class="sc-caption"><a href="https://soundcloud.com/nightliner" target="_blank" rel="noopener">Nightliner</a> · <a href="https://soundcloud.com/nightliner/departure" target="_blank" rel="noopener">Departure</a></div>
       </div>
     </div>
   </section>
@@ -452,7 +445,7 @@
     <div class="contact-inner reveal">
       <span class="eyebrow">003 — Follow</span>
       <h2>Follow the <span>route</span></h2>
-      <p>The project is still under construction. The first transmissions will land here as soon as they're ready to ship.</p>
+      <p>The first transmissions are already out. More are on the way — follow along for what's next.</p>
       <div class="social-row">
         <a href="https://soundcloud.com/nightliner" target="_blank" rel="noopener">SoundCloud</a>
         <a href="https://nightliner.bandcamp.com/?ui_context=usernav" target="_blank" rel="noopener">Bandcamp</a>

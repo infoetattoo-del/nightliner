@@ -9,16 +9,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Manrope:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --void: #08090a;
-    --asphalt: #131416;
-    --asphalt-2: #1b1c1f;
-    --line: rgba(245,244,240,0.09);
-    --line-strong: rgba(245,244,240,0.16);
-    --amber: #e8954d;
-    --ember: #ff5a2e;
-    --dash-blue: #4fb3e8;
-    --fog: #96989e;
-    --paper: #f2f1ec;
+    --void: #07090b;      /* Charcoal black */
+    --night: #071c34;     /* Night blue */
+    --deep: #0f2d4d;      /* Deep route */
+    --accent: #3e72b8;    /* VHS blue */
+    --dust: #a3b6c8;      /* Dust blue */
+    --paper: #e8ecee;     /* Dirty white */
+    --copper: #a36b4b;    /* Copper glow — rare: metadata, coordinates, fine lines, signature */
+    --line: rgba(163,182,200,0.10);
+    --line-strong: rgba(163,182,200,0.20);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -34,7 +33,7 @@
     font-size:0.72rem;
     letter-spacing:0.22em;
     text-transform:uppercase;
-    color:var(--amber);
+    color:var(--copper);
   }
   a{color:inherit;text-decoration:none;}
 
@@ -57,7 +56,7 @@
     width:34px;height:34px;
     display:flex;align-items:center;
   }
-  .nav-mark img{width:100%;height:100%;object-fit:contain;filter:invert(1);}
+  .nav-mark img{width:100%;height:100%;object-fit:contain;filter:brightness(0) invert(1);}
   .nav-links{
     display:flex;
     gap:clamp(16px,3vw,40px);
@@ -109,7 +108,7 @@
   .hero::before{
     content:'';
     position:absolute;inset:0;
-    background:linear-gradient(180deg, rgba(8,9,10,0.15) 0%, rgba(8,9,10,0.05) 35%, rgba(8,9,10,0.75) 82%, var(--void) 100%);
+    background:linear-gradient(180deg, rgba(7,9,11,0.15) 0%, rgba(7,9,11,0.05) 35%, rgba(7,9,11,0.75) 82%, var(--void) 100%);
     z-index:1;
   }
   .hero-content{
@@ -126,23 +125,23 @@
     font-size:0.72rem;
     letter-spacing:0.2em;
     text-transform:uppercase;
-    color:var(--fog);
+    color:var(--dust);
     max-width:280px;
     line-height:1.7;
   }
-  .hero-tag span{color:var(--amber);}
+  .hero-tag span{color:var(--copper);}
   .scroll-cue{
     display:flex;flex-direction:column;align-items:center;gap:8px;
     font-family:'IBM Plex Mono', monospace;
     font-size:0.65rem;
     letter-spacing:0.2em;
-    color:var(--fog);
+    color:var(--dust);
     text-transform:uppercase;
     opacity:0.8;
   }
   .scroll-cue .line{
     width:1px;height:34px;
-    background:linear-gradient(180deg, var(--fog), transparent);
+    background:linear-gradient(180deg, var(--dust), transparent);
     animation:cue 1.8s ease-in-out infinite;
   }
   @keyframes cue{
@@ -195,10 +194,10 @@
   }
   .route-quote em{
     font-style:normal;
-    color:var(--ember);
+    color:var(--accent);
   }
   .route-body p{
-    color:var(--fog);
+    color:var(--dust);
     font-size:1.02rem;
     line-height:1.85;
     margin-bottom:20px;
@@ -206,9 +205,9 @@
   .route-body strong{color:var(--paper);font-weight:600;}
 
   /* ---------- TRANSMISSIONS ---------- */
-  .transmissions{background:var(--asphalt);}
+  .transmissions{background:var(--night);}
   .lede{
-    color:var(--fog);
+    color:var(--dust);
     max-width:520px;
     margin:-30px 0 48px;
     font-size:1rem;
@@ -225,18 +224,18 @@
     .cards{grid-template-columns:1fr;}
   }
   .card{
-    background:var(--asphalt);
+    background:var(--night);
     padding:36px 30px;
     display:flex;
     flex-direction:column;
     gap:22px;
     transition:background .3s ease;
   }
-  .card:hover{background:var(--asphalt-2);}
+  .card:hover{background:var(--deep);}
   .card-index{
     font-family:'IBM Plex Mono', monospace;
     font-size:0.75rem;
-    color:var(--dash-blue);
+    color:var(--accent);
     letter-spacing:0.08em;
   }
   .card h3{
@@ -249,7 +248,7 @@
     font-size:0.68rem;
     letter-spacing:0.12em;
     text-transform:uppercase;
-    color:var(--fog);
+    color:var(--dust);
     display:flex;
     justify-content:space-between;
   }
@@ -262,56 +261,18 @@
   }
   .progress i{
     position:absolute;left:0;top:0;bottom:0;
-    background:var(--amber);
+    background:var(--copper);
     width:var(--pct);
   }
   .card-note{
     font-size:0.85rem;
-    color:var(--fog);
+    color:var(--dust);
     line-height:1.6;
-  }
-
-  /* ---------- MATERIEL ---------- */
-  .gear{background:var(--void);}
-  .gear-list{
-    border-top:1px solid var(--line);
-  }
-  .gear-row{
-    display:grid;
-    grid-template-columns:60px 1fr auto;
-    align-items:center;
-    gap:24px;
-    padding:26px 0;
-    border-bottom:1px solid var(--line);
-  }
-  .gear-row .idx{
-    font-family:'IBM Plex Mono', monospace;
-    color:var(--fog);
-    font-size:0.8rem;
-  }
-  .gear-row h3{
-    font-size:1.25rem;
-    text-transform:uppercase;
-    color:var(--paper);
-    font-weight:600;
-  }
-  .gear-row .role{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:0.72rem;
-    color:var(--dash-blue);
-    text-transform:uppercase;
-    letter-spacing:0.1em;
-    text-align:right;
-    white-space:nowrap;
-  }
-  @media (max-width:640px){
-    .gear-row{grid-template-columns:36px 1fr;}
-    .gear-row .role{grid-column:2;text-align:left;margin-top:4px;}
   }
 
   /* ---------- CONTACT ---------- */
   .contact{
-    background:var(--asphalt);
+    background:var(--night);
     text-align:left;
   }
   .contact-inner{
@@ -325,9 +286,9 @@
     max-width:820px;
     line-height:1.05;
   }
-  .contact h2 span{color:var(--ember);}
+  .contact h2 span{color:var(--accent);}
   .contact p{
-    color:var(--fog);
+    color:var(--dust);
     max-width:480px;
     line-height:1.8;
   }
@@ -347,9 +308,9 @@
     transition:border-color .25s ease, color .25s ease, background .25s ease;
   }
   .social-row a:hover{
-    border-color:var(--amber);
-    color:var(--void);
-    background:var(--amber);
+    border-color:var(--accent);
+    color:var(--paper);
+    background:var(--accent);
   }
 
   footer{
@@ -361,12 +322,12 @@
     gap:20px;
     border-top:1px solid var(--line);
   }
-  .foot-mark{width:24px;height:24px;opacity:0.8;}
-  .foot-mark img{width:100%;height:100%;object-fit:contain;filter:invert(1);}
+  .foot-mark{width:24px;height:24px;opacity:0.9;}
+  .foot-mark img{width:100%;height:100%;object-fit:contain;filter:brightness(0) invert(1);}
   footer .copy{
     font-family:'IBM Plex Mono', monospace;
     font-size:0.68rem;
-    color:var(--fog);
+    color:var(--copper);
     letter-spacing:0.08em;
     text-transform:uppercase;
   }
@@ -381,14 +342,14 @@
     align-items:center;
     gap:14px;
     padding:0 5vw;
-    background:rgba(8,9,10,0.72);
+    background:rgba(7,9,11,0.72);
     backdrop-filter:blur(6px);
     border-top:1px solid var(--line);
     font-family:'IBM Plex Mono', monospace;
     font-size:0.62rem;
     letter-spacing:0.1em;
     text-transform:uppercase;
-    color:var(--fog);
+    color:var(--dust);
   }
   .rs-label{white-space:nowrap;min-width:96px;}
   .rs-track{
@@ -408,13 +369,13 @@
     position:absolute;top:50%;
     width:7px;height:7px;
     border-radius:50%;
-    background:var(--ember);
-    box-shadow:0 0 8px 1px rgba(255,90,46,0.7);
+    background:var(--copper);
+    box-shadow:0 0 8px 1px rgba(163,107,75,0.7);
     transform:translate(-50%,-50%);
     left:0%;
     transition:left .1s linear;
   }
-  .rs-km{white-space:nowrap;color:var(--paper);min-width:78px;text-align:right;}
+  .rs-km{white-space:nowrap;color:var(--copper);min-width:78px;text-align:right;}
 
   @media (max-width:640px){
     .rs-label{min-width:0;font-size:0.58rem;}
@@ -425,11 +386,10 @@
 <body>
 
   <nav class="nav">
-    <a href="#top" class="nav-mark"><img src="mark.png" alt="Nightliner"></a>
+    <a href="#top" class="nav-mark"><img src="mark-v2.png" alt="Nightliner"></a>
     <div class="nav-links">
       <a href="#route">On the road</a>
       <a href="#transmissions">Transmissions</a>
-      <a href="#gear" class="hidden-mobile">Gear</a>
       <a href="#contact">Contact</a>
     </div>
   </nav>
@@ -448,7 +408,7 @@
       <h2>On the road</h2>
     </div>
     <div class="route-grid">
-      <p class="route-quote reveal">By day, I drive a bus.<br>By night, I drive <em>the sound</em>.</p>
+      <p class="route-quote reveal">Nights, and early mornings, I drive a bus.<br>Off the clock, I drive <em>the sound</em>.</p>
       <div class="route-body reveal">
         <p>The name comes from the job: <strong>night-shift coach driver</strong>, hours spent fixing on the white line while the city sleeps. Music has always run in parallel — techno and minimal, produced since the early 2010s, until a pause in 2012.</p>
         <p>Nightliner is that pause coming to an end. The project is back on the road with new gear and a slower, more deliberate way of building tracks: less speed, more distance.</p>
@@ -488,45 +448,22 @@
     </div>
   </section>
 
-  <section id="gear" class="gear">
-    <div class="section-head reveal">
-      <span class="eyebrow">003 — On board</span>
-      <h2>Gear on board</h2>
-    </div>
-    <div class="gear-list reveal">
-      <div class="gear-row">
-        <span class="idx">01</span>
-        <h3>Ableton Live 11</h3>
-        <span class="role">Production rig</span>
-      </div>
-      <div class="gear-row">
-        <span class="idx">02</span>
-        <h3>Push 2</h3>
-        <span class="role">Controller / sequencing</span>
-      </div>
-      <div class="gear-row">
-        <span class="idx">03</span>
-        <h3>Roland S‑1</h3>
-        <span class="role">Synthesis / textures</span>
-      </div>
-    </div>
-  </section>
-
   <section id="contact" class="contact">
     <div class="contact-inner reveal">
-      <span class="eyebrow">004 — Follow</span>
+      <span class="eyebrow">003 — Follow</span>
       <h2>Follow the <span>route</span></h2>
       <p>The project is still under construction. The first transmissions will land here as soon as they're ready to ship.</p>
       <div class="social-row">
-        <a href="#" target="_blank" rel="noopener">Instagram</a>
-        <a href="#" target="_blank" rel="noopener">SoundCloud</a>
-        <a href="mailto:contact@nightliner.fr">Email</a>
+        <a href="https://soundcloud.com/nightliner" target="_blank" rel="noopener">SoundCloud</a>
+        <a href="https://nightliner.bandcamp.com/?ui_context=usernav" target="_blank" rel="noopener">Bandcamp</a>
+        <a href="https://www.instagram.com/nightliner.project/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.youtube.com/@nightliner.project" target="_blank" rel="noopener">YouTube</a>
       </div>
     </div>
   </section>
 
   <footer>
-    <div class="foot-mark"><img src="mark.png" alt=""></div>
+    <div class="foot-mark"><img src="mark-v2.png" alt=""></div>
     <span class="copy">Nightliner — work in progress — 2026</span>
   </footer>
 
@@ -547,7 +484,6 @@
       {id:'top', name:'DEPARTURE'},
       {id:'route', name:'ON THE ROAD'},
       {id:'transmissions', name:'TRANSMISSIONS'},
-      {id:'gear', name:'GEAR'},
       {id:'contact', name:'ARRIVAL'}
     ].map(s => ({...s, el: document.getElementById(s.id)}));
 

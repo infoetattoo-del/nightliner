@@ -205,11 +205,14 @@
   .route-body strong{color:var(--paper);font-weight:600;}
 
   /* ---------- TRANSMISSIONS ---------- */
-  .transmissions{
+  .transmissions, .contact{
     position:relative;
     background:
-      linear-gradient(180deg, rgba(7,9,11,0.90) 0%, rgba(7,9,11,0.80) 40%, rgba(7,9,11,0.94) 100%),
+      linear-gradient(180deg, rgba(7,9,11,0.62) 0%, rgba(7,9,11,0.5) 40%, rgba(7,9,11,0.68) 100%),
       url('transmissions-bg.jpg') center 30% / cover no-repeat fixed;
+  }
+  .transmissions .section-head, .transmissions .lede, .contact-inner{
+    text-shadow: 0 2px 18px rgba(7,9,11,0.9);
   }
   .lede{
     color:var(--dust);
@@ -270,7 +273,6 @@
 
   /* ---------- CONTACT ---------- */
   .contact{
-    background:var(--night);
     text-align:left;
   }
   .contact-inner{

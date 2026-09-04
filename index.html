@@ -3,518 +3,488 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NIGHTLINER — Night Transmissions</title>
+<title>NIGHTLINER</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Manrope:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --void: #07090b;      /* Charcoal black */
-    --night: #071c34;     /* Night blue */
-    --deep: #0f2d4d;      /* Deep route */
-    --accent: #3e72b8;    /* VHS blue */
-    --dust: #a3b6c8;      /* Dust blue */
-    --paper: #e8ecee;     /* Dirty white */
-    --copper: #a36b4b;    /* Copper glow — rare: metadata, coordinates, fine lines, signature */
-    --line: rgba(163,182,200,0.10);
-    --line-strong: rgba(163,182,200,0.20);
+    --ink: #000000;
+    --panel: #121212;
+    --paper: #e5e5e5;
+    --mute: #7a7a7a;
+    --line: rgba(229,229,229,0.10);
+    --line-strong: rgba(229,229,229,0.2);
+    --signal: #3ddc84; /* muted neon green, hover-only accent */
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
-    background:var(--void);
+    background:var(--ink);
     color:var(--paper);
     font-family:'Manrope', sans-serif;
     overflow-x:hidden;
   }
-  h1,h2,h3{font-family:'Rajdhani', sans-serif;font-weight:700;letter-spacing:0.01em;}
-  .eyebrow{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:0.72rem;
-    letter-spacing:0.22em;
-    text-transform:uppercase;
-    color:var(--copper);
-  }
   a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--signal);color:var(--paper);}
 
   @media (prefers-reduced-motion: reduce){
     *{animation:none !important;transition:none !important;}
   }
 
+  /* ---------- ANALOG GRAIN + CRT SCANLINES ---------- */
+  .grain{
+    position:fixed;inset:0;
+    z-index:400;
+    pointer-events:none;
+    opacity:0.05;
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  .scanlines{
+    position:fixed;inset:0;
+    z-index:401;
+    pointer-events:none;
+    opacity:0.04;
+    mix-blend-mode:overlay;
+    background:repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.5) 0px,
+      rgba(255,255,255,0.5) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  }
+
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  .kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--mute);
+    display:block;
+    margin-bottom:20px;
+  }
+
+  /* ---------- SCROLL RAIL (signature element) ---------- */
+  .rail{
+    position:fixed;
+    left:0;top:0;bottom:0;
+    width:2px;
+    background:var(--line);
+    z-index:200;
+  }
+  .rail-fill{
+    position:absolute;left:0;top:0;width:100%;
+    height:0%;
+    background:var(--signal);
+    opacity:0.7;
+    transition:height .08s linear;
+  }
+
+  /* ---------- SECTION INDEX ---------- */
+  .index{
+    position:fixed;
+    right:32px;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:150;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+    align-items:flex-end;
+  }
+  .index a{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.68rem;
+    letter-spacing:0.08em;
+    color:var(--mute);
+    opacity:0.55;
+    transition:opacity .3s ease, color .3s ease;
+  }
+  .index a .dash{
+    width:14px;height:1px;
+    background:var(--mute);
+    transition:background .3s ease, width .3s ease;
+  }
+  .index a.active{
+    opacity:1;
+    color:var(--paper);
+  }
+  .index a.active .dash{
+    background:var(--signal);
+    width:26px;
+  }
+  @media (max-width:900px){
+    .index{display:none;}
+  }
+
   /* ---------- NAV ---------- */
   .nav{
     position:fixed;
-    top:0;left:0;right:0;
-    z-index:100;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:22px 5vw;
-    mix-blend-mode:difference;
+    top:0;left:0;
+    z-index:150;
+    padding:28px 0 0 40px;
   }
-  .nav-mark{
-    width:34px;height:34px;
-    display:flex;align-items:center;
+  .nav img{
+    width:30px;height:30px;
+    object-fit:contain;
+    filter:brightness(0) invert(1);
+    opacity:0.9;
   }
-  .nav-mark img{width:100%;height:100%;object-fit:contain;filter:brightness(0) invert(1);}
-  .nav-links{
-    display:flex;
-    gap:clamp(16px,3vw,40px);
-    font-family:'IBM Plex Mono', monospace;
-    font-size:0.7rem;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-  }
-  .nav-links a{
-    position:relative;
-    padding-bottom:4px;
-    opacity:0.85;
-    transition:opacity .25s ease;
-  }
-  .nav-links a:hover{opacity:1;}
-  .nav-links a::after{
-    content:'';
-    position:absolute;left:0;bottom:0;
-    width:0;height:1px;
-    background:var(--paper);
-    transition:width .25s ease;
-  }
-  .nav-links a:hover::after{width:100%;}
-  .nav-links a.hidden-mobile{display:inline;}
   @media (max-width:640px){
-    .nav-links a.hidden-mobile{display:none;}
+    .nav{padding:22px 0 0 24px;}
   }
 
-  /* ---------- HERO ---------- */
-  .hero{
-    position:relative;
-    height:100svh;
-    width:100%;
-    overflow:hidden;
-    display:flex;
-    align-items:flex-end;
-  }
-  .hero-bg{
-    position:absolute;inset:0;
-    width:100%;height:100%;
-    object-fit:cover;
-    object-position:center 40%;
-    animation:hero-drift 28s ease-in-out infinite alternate;
-  }
-  @keyframes hero-drift{
-    from{transform:scale(1.04) translateY(0);}
-    to{transform:scale(1.11) translateY(-1.5%);}
-  }
-  .hero::before{
-    content:'';
-    position:absolute;inset:0;
-    background:linear-gradient(180deg, rgba(7,9,11,0.05) 0%, rgba(7,9,11,0.0) 35%, rgba(7,9,11,0.45) 82%, var(--void) 100%);
-    z-index:1;
-  }
-  .hero-content{
-    position:relative;z-index:2;
-    width:100%;
-    padding:0 5vw 64px;
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-end;
-    gap:24px;
-  }
-  .hero-tag{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:0.72rem;
-    letter-spacing:0.2em;
-    text-transform:uppercase;
-    color:var(--dust);
-    max-width:280px;
-    line-height:1.7;
-  }
-  .hero-tag span{color:var(--copper);}
-  .scroll-cue{
-    display:flex;flex-direction:column;align-items:center;gap:8px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:0.65rem;
-    letter-spacing:0.2em;
-    color:var(--dust);
-    text-transform:uppercase;
-    opacity:0.8;
-  }
-  .scroll-cue .line{
-    width:1px;height:34px;
-    background:linear-gradient(180deg, var(--dust), transparent);
-    animation:cue 1.8s ease-in-out infinite;
-  }
-  @keyframes cue{
-    0%{transform:scaleY(0.4);opacity:0.3;transform-origin:top;}
-    50%{transform:scaleY(1);opacity:1;transform-origin:top;}
-    100%{transform:scaleY(0.4);opacity:0.3;transform-origin:top;}
-  }
-
-  /* ---------- SECTION SHELL ---------- */
+  /* ---------- SHARED SECTION SHELL ---------- */
   section{
-    position:relative;
-    padding:120px 5vw;
+    padding:160px 40px;
+    max-width:1100px;
+    margin:0 auto;
   }
-  .section-head{
-    display:flex;
-    align-items:baseline;
-    gap:18px;
-    margin-bottom:56px;
-    border-top:1px solid var(--line-strong);
-    padding-top:18px;
-  }
-  .section-head .eyebrow{white-space:nowrap;}
-  .section-head h2{
-    font-size:clamp(1.6rem, 3vw, 2.4rem);
-    text-transform:uppercase;
+  @media (max-width:640px){
+    section{padding:110px 24px;}
   }
   .reveal{
     opacity:0;
-    transform:translateY(24px);
+    transform:translateY(18px);
     transition:opacity .8s ease, transform .8s ease;
   }
   .reveal.in{opacity:1;transform:translateY(0);}
 
-  /* ---------- EN ROUTE ---------- */
-  .route{background:var(--void);}
-  .route-grid{
-    display:grid;
-    grid-template-columns:1.1fr 1fr;
-    gap:60px;
-  }
-  @media (max-width:820px){
-    .route-grid{grid-template-columns:1fr;gap:32px;}
-  }
-  .route-quote{
-    font-family:'Rajdhani', sans-serif;
+  h2{
+    font-family:'Space Grotesk', sans-serif;
     font-weight:600;
-    font-size:clamp(1.6rem, 3.4vw, 2.6rem);
-    line-height:1.25;
-    color:var(--paper);
+    font-size:clamp(1.8rem, 3.4vw, 2.6rem);
+    letter-spacing:-0.01em;
+    max-width:640px;
+    line-height:1.2;
   }
-  .route-quote em{
-    font-style:normal;
-    color:var(--accent);
+
+  /* ---------- HERO ---------- */
+  .hero{
+    height:100svh;
+    max-width:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:40px;
+    position:relative;
   }
-  .route-body p{
-    color:var(--dust);
-    font-size:1.02rem;
-    line-height:1.85;
-    margin-bottom:20px;
+  .hero-mark{
+    width:64px;
+    height:64px;
+    object-fit:contain;
+    filter:brightness(0) invert(1);
+    animation:breathe 6s ease-in-out infinite;
+    margin-bottom:36px;
   }
-  .route-body strong{color:var(--paper);font-weight:600;}
-  .route-tagline{
-    color:var(--copper) !important;
-    font-style:italic;
-    font-family:'Rajdhani', sans-serif;
-    font-size:1.1rem;
+  @keyframes breathe{
+    0%,100%{opacity:0.85;transform:scale(1);}
+    50%{opacity:1;transform:scale(1.04);}
+  }
+  .hero-word{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(2.2rem, 7vw, 4.6rem);
+    letter-spacing:0.06em;
+    margin-bottom:22px;
+  }
+  .hero-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--mute);
+  }
+  .hero-cue{
+    position:absolute;
+    bottom:48px;
+    left:50%;
+    transform:translateX(-50%);
+    width:1px;height:36px;
+    background:linear-gradient(180deg, var(--mute), transparent);
+    animation:cue 1.8s ease-in-out infinite;
+  }
+  @keyframes cue{
+    0%{transform:translateX(-50%) scaleY(0.4);opacity:0.3;transform-origin:top;}
+    50%{transform:translateX(-50%) scaleY(1);opacity:1;transform-origin:top;}
+    100%{transform:translateX(-50%) scaleY(0.4);opacity:0.3;transform-origin:top;}
+  }
+
+  /* ---------- MUSIC ---------- */
+  .track-list{
+    border-top:1px solid var(--line);
     margin-top:8px;
   }
-
-  /* ---------- TRANSMISSIONS ---------- */
-  .transmissions, .contact{
-    position:relative;
-    background:
-      linear-gradient(180deg, rgba(7,9,11,0.62) 0%, rgba(7,9,11,0.5) 40%, rgba(7,9,11,0.68) 100%),
-      url('transmissions-bg.jpg') center 30% / cover no-repeat fixed;
+  .track{
+    border-bottom:1px solid var(--line);
   }
-  .transmissions .section-head, .transmissions .lede, .contact-inner{
-    text-shadow: 0 2px 18px rgba(7,9,11,0.9);
-  }
-  .lede{
-    color:var(--dust);
-    max-width:520px;
-    margin:-30px 0 48px;
-    font-size:1rem;
-    line-height:1.7;
-  }
-  .cards{
-    display:grid;
-    grid-template-columns:repeat(2, 1fr);
-    gap:1px;
-    background:var(--line);
-    border:1px solid var(--line);
-  }
-  @media (max-width:820px){
-    .cards{grid-template-columns:1fr;}
-  }
-  .card{
-    background:rgba(7,9,11,0.55);
-    backdrop-filter:blur(3px);
-    padding:36px 30px;
+  .track summary{
+    list-style:none;
     display:flex;
-    flex-direction:column;
-    gap:18px;
-    transition:background .3s ease;
+    align-items:center;
+    gap:24px;
+    padding:28px 0;
+    cursor:pointer;
   }
-  .card:hover{background:rgba(15,45,77,0.6);}
-  .card-index{
+  .track summary::-webkit-details-marker{display:none;}
+  .track-num{
     font-family:'IBM Plex Mono', monospace;
-    font-size:0.75rem;
-    color:var(--accent);
-    letter-spacing:0.08em;
+    font-size:0.8rem;
+    color:var(--mute);
+    min-width:28px;
   }
-  .card h3{
+  .track-title{
+    font-family:'Space Grotesk', sans-serif;
     font-size:1.3rem;
-    text-transform:uppercase;
-    color:var(--paper);
+    font-weight:600;
+    flex:1;
   }
-  .sc-embed{
-    border-radius:2px;
-    overflow:hidden;
-    line-height:0;
-  }
-  .sc-embed iframe{display:block;}
-  .sc-caption{
+  .track-toggle{
     font-family:'IBM Plex Mono', monospace;
     font-size:0.68rem;
-    letter-spacing:0.04em;
-    color:var(--dust);
-  }
-  .sc-caption a{
-    color:var(--dust);
-    border-bottom:1px solid transparent;
-    transition:color .2s ease, border-color .2s ease;
-  }
-  .sc-caption a:hover{color:var(--paper);border-color:var(--accent);}
-
-  /* ---------- CONTACT ---------- */
-  .contact{
-    text-align:left;
-  }
-  .contact-inner{
-    display:flex;
-    flex-direction:column;
-    gap:28px;
-  }
-  .contact h2{
-    font-size:clamp(2rem,5vw,3.6rem);
-    text-transform:uppercase;
-    max-width:820px;
-    line-height:1.05;
-  }
-  .contact h2 span{color:var(--accent);}
-  .contact p{
-    color:var(--dust);
-    max-width:480px;
-    line-height:1.8;
-  }
-  .social-row{
-    display:flex;
-    flex-wrap:wrap;
-    gap:14px;
-    margin-top:12px;
-  }
-  .social-row a{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:0.75rem;
     letter-spacing:0.1em;
     text-transform:uppercase;
-    padding:12px 20px;
+    color:var(--mute);
     border:1px solid var(--line-strong);
-    transition:border-color .25s ease, color .25s ease, background .25s ease;
+    padding:8px 16px;
+    border-radius:100px;
+    transition:border-color .25s ease, color .25s ease;
+    white-space:nowrap;
   }
-  .social-row a:hover{
-    border-color:var(--accent);
-    color:var(--paper);
-    background:var(--accent);
+  .track:hover .track-toggle{border-color:var(--signal);color:var(--paper);}
+  .track[open] .track-toggle::before{content:"Close";}
+  .track:not([open]) .track-toggle::before{content:"Play";}
+  .track[open] summary{background:var(--panel);margin:0 -40px;padding-left:40px;padding-right:40px;}
+  .track[open] .track-body{background:var(--panel);margin:0 -40px;padding-left:92px;padding-right:40px;}
+  .track-body{
+    padding:20px 0 32px 52px;
+  }
+  @media (max-width:640px){
+    .track[open] summary{margin:0 -24px;padding-left:24px;padding-right:24px;}
+    .track[open] .track-body{margin:0 -24px;padding-left:76px;padding-right:24px;}
+  }
+  .track-embed{line-height:0;}
+  .track-embed iframe{display:block;}
+  .track-caption{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.68rem;
+    color:var(--mute);
+    margin-top:10px;
+  }
+  .track-caption a{
+    color:var(--mute);
+    border-bottom:1px solid transparent;
+  }
+  .track-caption a:hover{color:var(--paper);border-color:var(--signal);}
+
+  /* ---------- NOTES ---------- */
+  .notes-body{
+    max-width:620px;
+    margin-top:40px;
+  }
+  .notes-body p{
+    color:var(--mute);
+    font-size:1.05rem;
+    line-height:1.9;
+    margin-bottom:26px;
+  }
+  .notes-tagline{
+    color:var(--paper) !important;
+    font-style:italic;
+  }
+  .notes-tagline em{
+    font-style:italic;
+    color:var(--signal);
   }
 
-  footer{
-    background:var(--void);
-    padding:32px 5vw 96px;
+  /* ---------- FREQUENCY ---------- */
+  .link-list{
+    border-top:1px solid var(--line);
+    margin-top:8px;
+    max-width:640px;
+  }
+  .link-row{
+    font-family:'Space Grotesk', sans-serif;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:20px;
-    border-top:1px solid var(--line);
+    padding:26px 0;
+    border-bottom:1px solid var(--line);
+    font-size:1.15rem;
+    font-weight:600;
+    transition:padding-left .25s ease;
   }
-  .foot-mark{width:24px;height:24px;opacity:0.9;}
-  .foot-mark img{width:100%;height:100%;object-fit:contain;filter:brightness(0) invert(1);}
-  footer .copy{
+  .link-row:hover{padding-left:10px;}
+  .link-row .arrow{
     font-family:'IBM Plex Mono', monospace;
-    font-size:0.68rem;
-    color:var(--copper);
-    letter-spacing:0.08em;
-    text-transform:uppercase;
+    color:var(--mute);
+    transition:color .25s ease, transform .25s ease;
+  }
+  .link-row:hover .arrow{color:var(--signal);transform:translateX(4px);}
+  .freq-note{
+    color:var(--mute);
+    max-width:520px;
+    margin-bottom:8px;
+    line-height:1.7;
   }
 
-  /* ---------- ROUTE STRIP (signature scroll element) ---------- */
-  .route-strip{
-    position:fixed;
-    left:0;right:0;bottom:0;
-    z-index:90;
-    height:34px;
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding:48px 40px 64px;
     display:flex;
     align-items:center;
-    gap:14px;
-    padding:0 5vw;
-    background:rgba(7,9,11,0.72);
-    backdrop-filter:blur(6px);
+    justify-content:space-between;
+    max-width:1100px;
+    margin:0 auto;
     border-top:1px solid var(--line);
+  }
+  footer img{
+    width:20px;height:20px;
+    object-fit:contain;
+    filter:brightness(0) invert(1);
+    opacity:0.6;
+  }
+  footer span{
     font-family:'IBM Plex Mono', monospace;
-    font-size:0.62rem;
-    letter-spacing:0.1em;
+    font-size:0.68rem;
+    letter-spacing:0.08em;
     text-transform:uppercase;
-    color:var(--dust);
+    color:var(--mute);
   }
-  .rs-label{white-space:nowrap;min-width:96px;}
-  .rs-track{
-    position:relative;
-    flex:1;
-    height:1px;
-    background:var(--line-strong);
-  }
-  .rs-track::before{
-    content:'';
-    position:absolute;left:0;top:50%;
-    width:100%;height:1px;
-    background-image:repeating-linear-gradient(90deg, var(--line-strong) 0 6px, transparent 6px 14px);
-    transform:translateY(-50%);
-  }
-  .rs-dot{
-    position:absolute;top:50%;
-    width:7px;height:7px;
-    border-radius:50%;
-    background:var(--copper);
-    box-shadow:0 0 8px 1px rgba(163,107,75,0.7);
-    transform:translate(-50%,-50%);
-    left:0%;
-    transition:left .1s linear;
-  }
-  .rs-km{white-space:nowrap;color:var(--copper);min-width:78px;text-align:right;}
-
   @media (max-width:640px){
-    .rs-label{min-width:0;font-size:0.58rem;}
-    section{padding:90px 6vw;}
+    footer{padding:36px 24px 48px;}
   }
 </style>
 </head>
 <body>
 
+  <div class="grain"></div>
+  <div class="scanlines"></div>
+
+  <div class="rail"><div class="rail-fill" id="railFill"></div></div>
+
   <nav class="nav">
-    <a href="#top" class="nav-mark"><img src="mark-v2.png" alt="Nightliner"></a>
-    <div class="nav-links">
-      <a href="#route">On the road</a>
-      <a href="#transmissions">Transmissions</a>
-      <a href="#contact">Contact</a>
-    </div>
+    <a href="#top"><img src="mark-v2.png" alt="Nightliner"></a>
   </nav>
 
-  <div id="top" class="hero">
-    <img class="hero-bg" src="hero-v3.png" alt="Nightliner — route de nuit">
-    <div class="hero-content">
-      <p class="hero-tag">Recorded between shifts.<br><span>Ableton Live 11 · Push 2 · Roland S‑1.</span><br>Two transmissions out now.</p>
-      <div class="scroll-cue"><span>Scroll</span><span class="line"></span></div>
-    </div>
-  </div>
+  <aside class="index" id="sectionIndex">
+    <a href="#music" data-target="music"><span class="dash"></span>01 — Music</a>
+    <a href="#notes" data-target="notes"><span class="dash"></span>02 — Notes</a>
+    <a href="#frequency" data-target="frequency"><span class="dash"></span>03 — Frequency</a>
+  </aside>
 
-  <section id="route" class="route">
-    <div class="section-head reveal">
-      <span class="eyebrow">001 — Origin</span>
-      <h2>On the road</h2>
-    </div>
-    <div class="route-grid">
-      <p class="route-quote reveal">Nights, and early mornings, I drive a bus.<br>Off the clock, I drive <em>the sound</em>.</p>
-      <div class="route-body reveal">
-        <p>Nightliner is a cinematic electronic music project inspired by long-distance touring across Europe.</p>
-        <p>Created between highways, empty parking lots, sleeping cities and countless nights on the road, Nightliner blends electronic music, field recordings and visual storytelling into a continuous travel journal.</p>
-        <p>The sound takes shape wherever the road leads — backstage at festivals, in auditoriums and arenas, or in the bunk of the bus between two shows.</p>
-        <p>This channel is a collection of late-night drives, ambient soundscapes, documentaries, road films and original music.</p>
-        <p class="route-tagline">Every journey leaves a trace.<br>Somewhere in Europe...</p>
-      </div>
+  <section id="top" class="hero">
+    <img class="hero-mark" src="mark-v2.png" alt="Nightliner">
+    <h1 class="hero-word">NIGHTLINER</h1>
+    <p class="hero-tag">Cinematic electronic music — Europe</p>
+    <div class="hero-cue"></div>
+  </section>
+
+  <section id="music">
+    <span class="kicker reveal">01 — Music</span>
+    <h2 class="reveal">Listen</h2>
+    <div class="track-list reveal">
+      <details class="track">
+        <summary>
+          <span class="track-num mono">01</span>
+          <span class="track-title">After Curfew</span>
+          <span class="track-toggle"></span>
+        </summary>
+        <div class="track-body">
+          <div class="track-embed">
+            <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay; encrypted-media" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2363508407&color=%230a0a0b&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
+          </div>
+          <div class="track-caption"><a href="https://soundcloud.com/nightliner" target="_blank" rel="noopener">Nightliner</a> · <a href="https://soundcloud.com/nightliner/aftercurfew" target="_blank" rel="noopener">After Curfew</a></div>
+        </div>
+      </details>
+      <details class="track">
+        <summary>
+          <span class="track-num mono">02</span>
+          <span class="track-title">Departure</span>
+          <span class="track-toggle"></span>
+        </summary>
+        <div class="track-body">
+          <div class="track-embed">
+            <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay; encrypted-media" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2354735027&color=%230a0a0b&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
+          </div>
+          <div class="track-caption"><a href="https://soundcloud.com/nightliner" target="_blank" rel="noopener">Nightliner</a> · <a href="https://soundcloud.com/nightliner/departure" target="_blank" rel="noopener">Departure</a></div>
+        </div>
+      </details>
     </div>
   </section>
 
-  <section id="transmissions" class="transmissions">
-    <div class="section-head reveal">
-      <span class="eyebrow">002 — In progress</span>
-      <h2>Transmissions</h2>
-    </div>
-    <p class="lede reveal">Two transmissions, live from the road. More on the way.</p>
-    <div class="cards reveal">
-      <div class="card">
-        <span class="card-index">TRK / 01</span>
-        <h3>After Curfew</h3>
-        <div class="sc-embed">
-          <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay; encrypted-media" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2363508407&color=%230f2d4d&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
-        </div>
-        <div class="sc-caption"><a href="https://soundcloud.com/nightliner" target="_blank" rel="noopener">Nightliner</a> · <a href="https://soundcloud.com/nightliner/aftercurfew" target="_blank" rel="noopener">After Curfew</a></div>
-      </div>
-      <div class="card">
-        <span class="card-index">TRK / 02</span>
-        <h3>Departure</h3>
-        <div class="sc-embed">
-          <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay; encrypted-media" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2354735027&color=%230f2d4d&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
-        </div>
-        <div class="sc-caption"><a href="https://soundcloud.com/nightliner" target="_blank" rel="noopener">Nightliner</a> · <a href="https://soundcloud.com/nightliner/departure" target="_blank" rel="noopener">Departure</a></div>
-      </div>
+  <section id="notes">
+    <span class="kicker reveal">02 — Notes</span>
+    <h2 class="reveal">On the road</h2>
+    <div class="notes-body reveal">
+      <p>Nightliner is a cinematic electronic music project inspired by long-distance touring across Europe.</p>
+      <p>Created between highways, empty parking lots, sleeping cities and countless nights on the road, Nightliner blends electronic music, field recordings and visual storytelling into a continuous travel journal.</p>
+      <p>The sound takes shape wherever the road leads — backstage at festivals, in auditoriums and arenas, or in the bunk of the bus between two shows.</p>
+      <p>This channel is a collection of late-night drives, ambient soundscapes, documentaries, road films and original music.</p>
+      <p class="notes-tagline">Every journey leaves a trace.<br><em>Somewhere in Europe...</em></p>
     </div>
   </section>
 
-  <section id="contact" class="contact">
-    <div class="contact-inner reveal">
-      <span class="eyebrow">003 — Tune in</span>
-      <h2>Stay on <span>frequency</span></h2>
-      <p>The first transmissions are already out. More are on the way — follow along for what's next.</p>
-      <div class="social-row">
-        <a href="https://soundcloud.com/nightliner" target="_blank" rel="noopener">SoundCloud</a>
-        <a href="https://nightliner.bandcamp.com/?ui_context=usernav" target="_blank" rel="noopener">Bandcamp</a>
-        <a href="https://www.instagram.com/nightliner.project/" target="_blank" rel="noopener">Instagram</a>
-        <a href="https://www.youtube.com/@nightliner.project" target="_blank" rel="noopener">YouTube</a>
-      </div>
+  <section id="frequency">
+    <span class="kicker reveal">03 — Frequency</span>
+    <h2 class="reveal">Stay on frequency</h2>
+    <p class="freq-note reveal" style="margin-top:24px;">The first transmissions are already out. More are on the way.</p>
+    <div class="link-list reveal">
+      <a class="link-row" href="https://soundcloud.com/nightliner" target="_blank" rel="noopener">SoundCloud <span class="arrow">→</span></a>
+      <a class="link-row" href="https://nightliner.bandcamp.com/?ui_context=usernav" target="_blank" rel="noopener">Bandcamp <span class="arrow">→</span></a>
+      <a class="link-row" href="https://www.instagram.com/nightliner.project/" target="_blank" rel="noopener">Instagram <span class="arrow">→</span></a>
+      <a class="link-row" href="https://www.youtube.com/@nightliner.project" target="_blank" rel="noopener">YouTube <span class="arrow">→</span></a>
     </div>
   </section>
 
   <footer>
-    <div class="foot-mark"><img src="mark-v2.png" alt=""></div>
-    <span class="copy">Nightliner — work in progress — 2026</span>
+    <img src="mark-v2.png" alt="">
+    <span>Nightliner — 2026</span>
   </footer>
 
-  <div class="route-strip">
-    <span class="rs-label" id="rs-label">ON THE ROAD</span>
-    <div class="rs-track"><span class="rs-dot" id="rs-dot"></span></div>
-    <span class="rs-km" id="rs-km">312 km</span>
-  </div>
-
   <script>
-    // Scroll-driven "route" indicator — the page's signature element
-    const dot = document.getElementById('rs-dot');
-    const km = document.getElementById('rs-km');
-    const label = document.getElementById('rs-label');
-    const TOTAL_KM = 312;
-
-    const sections = [
-      {id:'top', name:'DEPARTURE'},
-      {id:'route', name:'ON THE ROAD'},
-      {id:'transmissions', name:'TRANSMISSIONS'},
-      {id:'contact', name:'ARRIVAL'}
-    ].map(s => ({...s, el: document.getElementById(s.id)}));
-
+    const fill = document.getElementById('railFill');
     function onScroll(){
       const doc = document.documentElement;
       const scrollTop = doc.scrollTop || document.body.scrollTop;
       const scrollH = doc.scrollHeight - doc.clientHeight;
       const pct = scrollH > 0 ? Math.min(1, Math.max(0, scrollTop / scrollH)) : 0;
-
-      dot.style.left = (pct * 100) + '%';
-      km.textContent = Math.round(TOTAL_KM * (1 - pct)) + ' km';
-
-      let current = sections[0];
-      for(const s of sections){
-        const rect = s.el.getBoundingClientRect();
-        if(rect.top <= window.innerHeight * 0.5) current = s;
-      }
-      label.textContent = current.name;
+      fill.style.height = (pct * 100) + '%';
     }
     document.addEventListener('scroll', onScroll, {passive:true});
     onScroll();
 
-    // Reveal on scroll
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
     }, {threshold:0.15});
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    const navLinks = document.querySelectorAll('.index a');
+    const sections = ['music','notes','frequency'].map(id => document.getElementById(id));
+    const navIo = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          navLinks.forEach(l => l.classList.toggle('active', l.dataset.target === entry.target.id));
+        }
+      });
+    }, {threshold:0.5});
+    sections.forEach(s => navIo.observe(s));
+
+    document.querySelectorAll('.track').forEach(t => {
+      t.addEventListener('toggle', () => {
+        if(t.open){
+          document.querySelectorAll('.track').forEach(o => { if(o !== t) o.open = false; });
+        }
+      });
+    });
   </script>
 
 </body>

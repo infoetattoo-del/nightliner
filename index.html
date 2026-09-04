@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NIGHTLINER</title>
+<title>NIGHTLINER 81</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -20,7 +20,9 @@
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
-    background:var(--ink);
+    background:
+      linear-gradient(rgba(0,0,0,0.94), rgba(0,0,0,0.94)),
+      url('texture-81.jpg') center / cover no-repeat fixed;
     color:var(--paper);
     font-family:'Manrope', sans-serif;
     overflow-x:hidden;
@@ -131,10 +133,13 @@
     padding:28px 0 0 40px;
   }
   .nav img{
-    width:30px;height:30px;
+    width:120px;height:auto;
     object-fit:contain;
     filter:brightness(0) invert(1);
     opacity:0.9;
+  }
+  @media (max-width:640px){
+    .nav img{width:96px;}
   }
   @media (max-width:640px){
     .nav{padding:22px 0 0 24px;}
@@ -170,38 +175,36 @@
     height:100svh;
     max-width:none;
     display:flex;
-    flex-direction:column;
-    align-items:center;
+    align-items:flex-end;
     justify-content:center;
-    text-align:center;
-    padding:40px;
+    padding:0 40px 64px;
     position:relative;
+    overflow:hidden;
   }
-  .hero-mark{
-    width:64px;
-    height:64px;
-    object-fit:contain;
-    filter:brightness(0) invert(1);
-    animation:breathe 6s ease-in-out infinite;
-    margin-bottom:36px;
+  .hero-bg{
+    position:absolute;inset:0;
+    width:100%;height:100%;
+    object-fit:cover;
+    object-position:center;
+    animation:hero-drift 30s ease-in-out infinite alternate;
   }
-  @keyframes breathe{
-    0%,100%{opacity:0.85;transform:scale(1);}
-    50%{opacity:1;transform:scale(1.04);}
+  @keyframes hero-drift{
+    from{transform:scale(1.03);}
+    to{transform:scale(1.09);}
   }
-  .hero-word{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:700;
-    font-size:clamp(2.2rem, 7vw, 4.6rem);
-    letter-spacing:0.06em;
-    margin-bottom:22px;
+  .hero::before{
+    content:'';
+    position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 45%, rgba(0,0,0,0.94) 100%);
   }
   .hero-tag{
+    position:relative;
     font-family:'IBM Plex Mono', monospace;
     font-size:0.75rem;
     letter-spacing:0.18em;
     text-transform:uppercase;
-    color:var(--mute);
+    color:var(--paper);
+    opacity:0.85;
   }
   .hero-cue{
     position:absolute;
@@ -209,7 +212,7 @@
     left:50%;
     transform:translateX(-50%);
     width:1px;height:36px;
-    background:linear-gradient(180deg, var(--mute), transparent);
+    background:linear-gradient(180deg, var(--paper), transparent);
     animation:cue 1.8s ease-in-out infinite;
   }
   @keyframes cue{
@@ -224,17 +227,21 @@
     margin-top:8px;
   }
   .track{
+    width:100%;
+    background:none;
+    border:0;
     border-bottom:1px solid var(--line);
-  }
-  .track summary{
-    list-style:none;
     display:flex;
     align-items:center;
     gap:24px;
     padding:28px 0;
     cursor:pointer;
+    font:inherit;
+    color:inherit;
+    text-align:left;
+    transition:padding-left .25s ease;
   }
-  .track summary::-webkit-details-marker{display:none;}
+  .track:hover{padding-left:10px;}
   .track-num{
     font-family:'IBM Plex Mono', monospace;
     font-size:0.8rem;
@@ -260,30 +267,48 @@
     white-space:nowrap;
   }
   .track:hover .track-toggle{border-color:var(--signal);color:var(--paper);}
-  .track[open] .track-toggle::before{content:"Close";}
-  .track:not([open]) .track-toggle::before{content:"Play";}
-  .track[open] summary{background:var(--panel);margin:0 -40px;padding-left:40px;padding-right:40px;}
-  .track[open] .track-body{background:var(--panel);margin:0 -40px;padding-left:92px;padding-right:40px;}
-  .track-body{
-    padding:20px 0 32px 52px;
+
+  /* ---------- VIDEO MODAL (minimal, borderless) ---------- */
+  dialog#videoModal{
+    border:none;
+    background:transparent;
+    padding:0;
+    width:min(92vw, 960px);
+    max-width:none;
+    position:fixed;
+    inset:0;
+    margin:auto;
   }
-  @media (max-width:640px){
-    .track[open] summary{margin:0 -24px;padding-left:24px;padding-right:24px;}
-    .track[open] .track-body{margin:0 -24px;padding-left:76px;padding-right:24px;}
+  dialog#videoModal::backdrop{
+    background:rgba(0,0,0,0.9);
   }
-  .track-embed{line-height:0;}
-  .track-embed iframe{display:block;}
-  .track-caption{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:0.68rem;
-    color:var(--mute);
-    margin-top:10px;
+  .modal-frame{
+    position:relative;
+    width:100%;
+    aspect-ratio:16/9;
+    background:#000;
+    line-height:0;
   }
-  .track-caption a{
-    color:var(--mute);
-    border-bottom:1px solid transparent;
+  .modal-frame iframe{
+    position:absolute;inset:0;
+    width:100%;height:100%;
+    border:0;
+    display:block;
   }
-  .track-caption a:hover{color:var(--paper);border-color:var(--signal);}
+  #closeModal{
+    position:absolute;
+    top:-44px;right:0;
+    background:none;
+    border:none;
+    color:var(--paper);
+    font-size:1.6rem;
+    line-height:1;
+    cursor:pointer;
+    opacity:0.8;
+    font-family:'Manrope', sans-serif;
+  }
+  #closeModal:hover{opacity:1;color:var(--signal);}
+
 
   /* ---------- NOTES ---------- */
   .notes-body{
@@ -372,7 +397,7 @@
   <div class="rail"><div class="rail-fill" id="railFill"></div></div>
 
   <nav class="nav">
-    <a href="#top"><img src="mark-v2.png" alt="Nightliner"></a>
+    <a href="#top"><img src="logo-81.png" alt="Nightliner 81"></a>
   </nav>
 
   <aside class="index" id="sectionIndex">
@@ -382,51 +407,46 @@
   </aside>
 
   <section id="top" class="hero">
-    <img class="hero-mark" src="mark-v2.png" alt="Nightliner">
-    <h1 class="hero-word">NIGHTLINER</h1>
+    <img class="hero-bg" src="hero-81.jpg" alt="Nightliner 81">
     <p class="hero-tag">Cinematic electronic music — Europe</p>
     <div class="hero-cue"></div>
   </section>
 
   <section id="music">
     <span class="kicker reveal">01 — Music</span>
-    <h2 class="reveal">Listen</h2>
+    <h2 class="reveal">Watch</h2>
     <div class="track-list reveal">
-      <details class="track">
-        <summary>
-          <span class="track-num mono">01</span>
-          <span class="track-title">After Curfew</span>
-          <span class="track-toggle"></span>
-        </summary>
-        <div class="track-body">
-          <div class="track-embed">
-            <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay; encrypted-media" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2363508407&color=%230a0a0b&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
-          </div>
-          <div class="track-caption"><a href="https://soundcloud.com/nightliner" target="_blank" rel="noopener">Nightliner</a> · <a href="https://soundcloud.com/nightliner/aftercurfew" target="_blank" rel="noopener">After Curfew</a></div>
-        </div>
-      </details>
-      <details class="track">
-        <summary>
-          <span class="track-num mono">02</span>
-          <span class="track-title">Departure</span>
-          <span class="track-toggle"></span>
-        </summary>
-        <div class="track-body">
-          <div class="track-embed">
-            <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay; encrypted-media" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2354735027&color=%230a0a0b&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
-          </div>
-          <div class="track-caption"><a href="https://soundcloud.com/nightliner" target="_blank" rel="noopener">Nightliner</a> · <a href="https://soundcloud.com/nightliner/departure" target="_blank" rel="noopener">Departure</a></div>
-        </div>
-      </details>
+      <button class="track" data-src="https://www.youtube.com/embed/anMv4ioAWZs?autoplay=1&rel=0">
+        <span class="track-num mono">01</span>
+        <span class="track-title">After Curfew</span>
+        <span class="track-toggle">Watch</span>
+      </button>
+      <button class="track" data-src="https://www.youtube.com/embed/z6R7Xum4fao?autoplay=1&rel=0">
+        <span class="track-num mono">02</span>
+        <span class="track-title">Departure</span>
+        <span class="track-toggle">Watch</span>
+      </button>
+      <button class="track" data-src="https://www.youtube.com/embed/wMH8YQv1oMQ?autoplay=1&rel=0">
+        <span class="track-num mono">03</span>
+        <span class="track-title">Video 03</span>
+        <span class="track-toggle">Watch</span>
+      </button>
     </div>
   </section>
+
+  <dialog id="videoModal">
+    <button id="closeModal" aria-label="Close">×</button>
+    <div class="modal-frame">
+      <iframe id="modalFrame" src="" title="Nightliner 81 video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+  </dialog>
 
   <section id="notes">
     <span class="kicker reveal">02 — Notes</span>
     <h2 class="reveal">On the road</h2>
     <div class="notes-body reveal">
-      <p>Nightliner is a cinematic electronic music project inspired by long-distance touring across Europe.</p>
-      <p>Created between highways, empty parking lots, sleeping cities and countless nights on the road, Nightliner blends electronic music, field recordings and visual storytelling into a continuous travel journal.</p>
+      <p>Nightliner 81 is a cinematic electronic music project inspired by long-distance touring across Europe.</p>
+      <p>Created between highways, empty parking lots, sleeping cities and countless nights on the road, Nightliner 81 blends electronic music, field recordings and visual storytelling into a continuous travel journal.</p>
       <p>The sound takes shape wherever the road leads — backstage at festivals, in auditoriums and arenas, or in the bunk of the bus between two shows.</p>
       <p>This channel is a collection of late-night drives, ambient soundscapes, documentaries, road films and original music.</p>
       <p class="notes-tagline">Every journey leaves a trace.<br><em>Somewhere in Europe...</em></p>
@@ -438,16 +458,17 @@
     <h2 class="reveal">Stay on frequency</h2>
     <p class="freq-note reveal" style="margin-top:24px;">The first transmissions are already out. More are on the way.</p>
     <div class="link-list reveal">
-      <a class="link-row" href="https://soundcloud.com/nightliner" target="_blank" rel="noopener">SoundCloud <span class="arrow">→</span></a>
-      <a class="link-row" href="https://nightliner.bandcamp.com/?ui_context=usernav" target="_blank" rel="noopener">Bandcamp <span class="arrow">→</span></a>
-      <a class="link-row" href="https://www.instagram.com/nightliner.project/" target="_blank" rel="noopener">Instagram <span class="arrow">→</span></a>
-      <a class="link-row" href="https://www.youtube.com/@nightliner.project" target="_blank" rel="noopener">YouTube <span class="arrow">→</span></a>
+      <a class="link-row" href="https://music.apple.com/fr/artist/nightliner-81/6800390442" target="_blank" rel="noopener">Apple Music <span class="arrow">→</span></a>
+      <a class="link-row" href="https://open.spotify.com/intl-fr/artist/4ICUotOw1n5aHqcXkT0NJy?si=70glJ7bfRLaoXwq1fuKnCA" target="_blank" rel="noopener">Spotify <span class="arrow">→</span></a>
+      <a class="link-row" href="https://nightliner81.bandcamp.com/" target="_blank" rel="noopener">Bandcamp <span class="arrow">→</span></a>
+      <a class="link-row" href="https://www.youtube.com/@nightliner.81" target="_blank" rel="noopener">YouTube <span class="arrow">→</span></a>
+      <a class="link-row" href="https://www.instagram.com/nightliner.81" target="_blank" rel="noopener">Instagram <span class="arrow">→</span></a>
     </div>
   </section>
 
   <footer>
     <img src="mark-v2.png" alt="">
-    <span>Nightliner — 2026</span>
+    <span>Nightliner 81 — 2026</span>
   </footer>
 
   <script>
@@ -478,12 +499,20 @@
     }, {threshold:0.5});
     sections.forEach(s => navIo.observe(s));
 
-    document.querySelectorAll('.track').forEach(t => {
-      t.addEventListener('toggle', () => {
-        if(t.open){
-          document.querySelectorAll('.track').forEach(o => { if(o !== t) o.open = false; });
-        }
+    const modal = document.getElementById('videoModal');
+    const modalFrame = document.getElementById('modalFrame');
+    document.querySelectorAll('.track[data-src]').forEach(t => {
+      t.addEventListener('click', () => {
+        modalFrame.src = t.dataset.src;
+        modal.showModal();
       });
+    });
+    document.getElementById('closeModal').addEventListener('click', () => modal.close());
+    modal.addEventListener('close', () => { modalFrame.src = ''; });
+    modal.addEventListener('click', (e) => {
+      const rect = modal.getBoundingClientRect();
+      const inside = e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
+      if(!inside) modal.close();
     });
   </script>
 

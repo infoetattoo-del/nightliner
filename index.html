@@ -248,6 +248,18 @@
     color:var(--mute);
     min-width:28px;
   }
+  .track-thumb{
+    width:100px;
+    height:56px;
+    object-fit:cover;
+    flex-shrink:0;
+    filter:grayscale(0.5) brightness(0.75) contrast(1.05);
+    transition:filter .3s ease;
+  }
+  .track:hover .track-thumb{filter:grayscale(0.15) brightness(0.95) contrast(1.05);}
+  @media (max-width:640px){
+    .track-thumb{width:64px;height:36px;}
+  }
   .track-title{
     font-family:'Space Grotesk', sans-serif;
     font-size:1.3rem;
@@ -370,22 +382,37 @@
     max-width:1100px;
     margin:0 auto;
     border-top:1px solid var(--line);
+    gap:24px;
   }
   footer img{
-    width:20px;height:20px;
+    width:100px;height:auto;
     object-fit:contain;
     filter:brightness(0) invert(1);
     opacity:0.6;
   }
-  footer span{
+  .footer-meta{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:6px;
+  }
+  .footer-meta span{
     font-family:'IBM Plex Mono', monospace;
-    font-size:0.68rem;
-    letter-spacing:0.08em;
+    font-size:0.65rem;
+    letter-spacing:0.06em;
     text-transform:uppercase;
     color:var(--mute);
   }
+  .footer-meta a{
+    color:var(--mute);
+    border-bottom:1px solid transparent;
+    transition:color .2s ease, border-color .2s ease;
+  }
+  .footer-meta a:hover{color:var(--paper);border-color:var(--signal);}
   @media (max-width:640px){
-    footer{padding:36px 24px 48px;}
+    footer{padding:36px 24px 48px;flex-direction:column;align-items:flex-start;gap:20px;}
+    .footer-meta{align-items:flex-start;}
+    footer img{width:84px;}
   }
 </style>
 </head>
@@ -417,16 +444,19 @@
     <h2 class="reveal">Watch</h2>
     <div class="track-list reveal">
       <button class="track" data-src="https://www.youtube.com/embed/anMv4ioAWZs?autoplay=1&rel=0">
+        <img class="track-thumb" src="https://img.youtube.com/vi/anMv4ioAWZs/hqdefault.jpg" alt="" loading="lazy">
         <span class="track-num mono">01</span>
         <span class="track-title">After Curfew</span>
         <span class="track-toggle">Watch</span>
       </button>
       <button class="track" data-src="https://www.youtube.com/embed/z6R7Xum4fao?autoplay=1&rel=0">
+        <img class="track-thumb" src="https://img.youtube.com/vi/z6R7Xum4fao/hqdefault.jpg" alt="" loading="lazy">
         <span class="track-num mono">02</span>
         <span class="track-title">Departure</span>
         <span class="track-toggle">Watch</span>
       </button>
       <button class="track" data-src="https://www.youtube.com/embed/wMH8YQv1oMQ?autoplay=1&rel=0">
+        <img class="track-thumb" src="https://img.youtube.com/vi/wMH8YQv1oMQ/hqdefault.jpg" alt="" loading="lazy">
         <span class="track-num mono">03</span>
         <span class="track-title">Video 03</span>
         <span class="track-toggle">Watch</span>
@@ -467,8 +497,11 @@
   </section>
 
   <footer>
-    <img src="mark-v2.png" alt="">
-    <span>Nightliner 81 — 2026</span>
+    <img src="logo-81.png" alt="Nightliner 81">
+    <div class="footer-meta">
+      <span>© 2026 Nightliner 81</span>
+      <span>Photo — <a href="https://unsplash.com/fr/@juzu_me" target="_blank" rel="noopener">Juan Ordonez</a></span>
+    </div>
   </footer>
 
   <script>
